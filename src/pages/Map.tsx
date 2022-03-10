@@ -6,7 +6,6 @@ import {
   IonToolbar,
   useIonViewDidEnter,
 } from "@ionic/react";
-import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { useQuery } from "react-query";
@@ -16,8 +15,7 @@ import ApiService from "../services/ApiService";
 import "./Map.css";
 
 const Map: React.FC = () => {
-  const [intervalMs, setIntervalMs] = useState(5000)
-  const buses = useQuery("buses", () => ApiService.getBuses(), {refetchInterval: intervalMs});
+  const buses = useQuery("buses", () => ApiService.getBuses(), {refetchInterval: 5000});
   const stops = useQuery("stops", ApiService.getStops);
   const info = useQuery("info", ApiService.getInfo);
 

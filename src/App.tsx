@@ -10,7 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { busOutline, calendarOutline, mapOutline, square, triangle } from 'ionicons/icons';
+import { busOutline, calendarOutline, mapOutline } from 'ionicons/icons';
 import Map from './pages/Map';
 import Timetable from './pages/Timetable';
 import Stops from './pages/Stops';

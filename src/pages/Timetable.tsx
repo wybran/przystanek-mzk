@@ -15,7 +15,7 @@ const Timetable: React.FC = () => {
             <IonTitle size="large">Rozkład Jazdy</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <iframe src="https://www.rozkladzik.pl/zielona_gora/" />
+        <iframe title="rozkladzik" src="https://www.rozkladzik.pl/zielona_gora/" />
       </IonContent>
     </IonPage>
   );
