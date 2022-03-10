@@ -1,0 +1,8 @@
+{
+  "name": "Przystanek MZK",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "46a05179"
+}

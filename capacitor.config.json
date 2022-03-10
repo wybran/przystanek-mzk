@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Przystanek MZK",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
