@@ -1,8 +1,13 @@
 import {
   IonContent,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
   IonPage,
   useIonViewDidEnter,
 } from "@ionic/react";
+import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
@@ -14,6 +19,7 @@ import { toast } from "react-toastify";
 import "./Map.css";
 
 const Map: React.FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const buses = useQuery("buses", () => ApiService.getBuses(), {
     refetchInterval: 5000,
   });
@@ -23,6 +29,15 @@ const Map: React.FC = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
+
+  const [selectedStop, setSelectedStop] = useState<any | null>(null);
+  const departures = useQuery(
+    ["departures", selectedStop],
+    ({ queryKey }) => ApiService.getDepartures(queryKey[1]),
+    {
+      refetchInterval: 5000,
+    }
+  );
 
   useIonViewDidEnter(() => {
     window.dispatchEvent(new Event("resize"));
@@ -52,7 +67,10 @@ const Map: React.FC = () => {
             Object.keys(buses.data).map((key, index) => (
               <Marker
                 key={index}
-                icon={BusMarker(buses.data[key].label, buses.data[key].type === "Autobusy Elektryczne")}
+                icon={BusMarker(
+                  buses.data[key].label,
+                  buses.data[key].type === "Autobusy Elektryczne"
+                )}
                 position={{
                   lat: buses.data[key].lat,
                   lng: buses.data[key].lon,
@@ -72,6 +90,13 @@ const Map: React.FC = () => {
                     lat: stops.data[key].lat,
                     lng: stops.data[key].lon,
                   }}
+                  eventHandlers={{
+                    click: async () => {
+                      console.log(stops.data[key].id);
+                      setSelectedStop(stops.data[key].id);
+                      setModalOpen(true);
+                    },
+                  }}
                 >
                   <Popup>{stops.data[key].name}</Popup>
                 </Marker>
@@ -79,6 +104,34 @@ const Map: React.FC = () => {
           </MarkerClusterGroup>
         </MapContainer>
       </IonContent>
+      <IonModal
+        isOpen={modalOpen}
+        swipeToClose={true}
+        breakpoints={[0.1, 0.5, 1]}
+        initialBreakpoint={0.5}
+        onDidDismiss={() => setModalOpen(false)}
+      >
+        <IonContent>
+          <IonList>
+            {departures.data && Object.keys(departures.data).length > 0 ? (
+              <IonItem>                                                #TODO convert timestamp
+                <IonLabel>[{selectedStop}] {departures.data[0]?.stop} {departures.dataUpdatedAt}</IonLabel>
+              </IonItem>
+            ) : null}
+
+            {departures.data &&
+              Object.keys(departures.data).map((key, index) => (
+                <IonItem key={index}>
+                  <IonLabel>
+                    {departures.data[key].line}{" "}
+                    {departures.data[key].destination}
+                  </IonLabel>
+                  {departures.data[key].time}
+                </IonItem>
+              ))}
+          </IonList>
+        </IonContent>
+      </IonModal>
     </IonPage>
   );
 };
