@@ -16,6 +16,16 @@ import ApiService from "../services/ApiService";
 const Stops: React.FC = () => {
   const stops = useQuery("stops", ApiService.getStops);
   const [searchText, setSearchText] = useState("");
+  const [filteredStops, setFilteredStops] = useState<any | null>(null);
+
+  const handleSearch = (e: any) => {
+    setSearchText(e);
+    setFilteredStops(
+      Object.keys(stops.data).filter((key, stop: any) =>
+        stops.data[key].name.toLowerCase().includes(e.toLowerCase())
+      )
+    );
+  };
 
   return (
     <IonPage>
@@ -26,16 +36,29 @@ const Stops: React.FC = () => {
         <IonToolbar>
           <IonSearchbar
             value={searchText}
-            onIonChange={(e) => setSearchText(e.detail.value!)}
+            onIonChange={(e) => handleSearch(e.detail.value)}
           ></IonSearchbar>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          {stops.data &&
+          {!filteredStops &&
+            stops.data &&
             Object.keys(stops.data).map((key, index) => (
               <IonItem key={index}>
-                <IonLabel>[{stops.data[key].id}] {stops.data[key].name}</IonLabel>
+                <IonLabel>
+                  [{stops.data[key].id}] {stops.data[key].name}
+                </IonLabel>
+              </IonItem>
+            ))}
+
+          {filteredStops &&
+            Object.keys(filteredStops).map((key, index) => (
+              <IonItem key={index}>
+                <IonLabel>
+                  [{stops.data[filteredStops[key]].id}]{" "}
+                  {stops.data[filteredStops[key]].name}
+                </IonLabel>
               </IonItem>
             ))}
         </IonList>

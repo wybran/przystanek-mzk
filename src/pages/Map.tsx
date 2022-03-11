@@ -8,6 +8,7 @@ import {
 } from "@ionic/react";
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
+import L from "leaflet";
 import { useQuery } from "react-query";
 import { BusMarker } from "../components/BusMarker";
 import { StopMarker } from "../components/StopMarker";
@@ -22,6 +23,13 @@ const Map: React.FC = () => {
   useIonViewDidEnter(() => {
     window.dispatchEvent(new Event("resize"));
   });
+
+  const clusterIcon = () => {
+    return L.divIcon({
+      className: "stopMarker",
+      iconSize: L.point(20, 20, true)
+    });
+  };
 
   return (
     <IonPage>
@@ -41,7 +49,7 @@ const Map: React.FC = () => {
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=d973041fe75f479393efd1a71c26b6d3"
           />
           {buses.data &&
             Object.keys(buses.data).map((key, index) => (
@@ -56,7 +64,7 @@ const Map: React.FC = () => {
                 <Tooltip direction="right" offset={[8, 0]} opacity={1} permanent>{buses.data[key].label}</Tooltip>
               </Marker>
             ))}
-          <MarkerClusterGroup maxClusterRadius={40}>
+          <MarkerClusterGroup maxClusterRadius={40} iconCreateFunction={clusterIcon}>
             {stops.data &&
               Object.keys(stops.data).map((key, index) => (
                 <Marker

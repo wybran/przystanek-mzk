@@ -3,3 +3,9 @@
     width: 100%;
     display: block;
 }
+.stopMarker {
+  background-image: url("../images/busstop_marker.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
