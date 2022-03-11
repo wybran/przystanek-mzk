@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Przystanek MZK</string>
+    <string name="title_activity_main">Przystanek MZK</string>
+    <string name="package_name">eu.krystian_wybranowski.przystanekmzk</string>
+    <string name="custom_url_scheme">eu.krystian_wybranowski.przystanekmzk</string>
+</resources>
