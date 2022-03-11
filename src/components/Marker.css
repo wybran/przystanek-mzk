@@ -2,3 +2,23 @@
     background: transparent;
     border: none;
 }
+.busMarker{
+    background-image: url("../images/map_bus.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+.busLabel{
+    position: relative;
+    top: 3px;
+    left: auto;
+    color: black;
+    font-weight: bold;
+    font-size: 13px;
+}
+.type {
+    font-size: large;
+    position: relative;
+    top: -30px;
+    right: -10px;
+}

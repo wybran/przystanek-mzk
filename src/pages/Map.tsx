@@ -13,12 +13,19 @@ import { useQuery } from "react-query";
 import { BusMarker } from "../components/BusMarker";
 import { StopMarker } from "../components/StopMarker";
 import ApiService from "../services/ApiService";
+import { toast } from "react-toastify";
 import "./Map.css";
 
 const Map: React.FC = () => {
-  const buses = useQuery("buses", () => ApiService.getBuses(), {refetchInterval: 5000});
+  const buses = useQuery("buses", () => ApiService.getBuses(), {
+    refetchInterval: 5000,
+  });
   const stops = useQuery("stops", ApiService.getStops);
-  const info = useQuery("info", ApiService.getInfo);
+  useQuery("info", ApiService.getInfo, {
+    onSuccess: (data) => toast(data[0].text),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   useIonViewDidEnter(() => {
     window.dispatchEvent(new Event("resize"));
@@ -27,19 +34,12 @@ const Map: React.FC = () => {
   const clusterIcon = () => {
     return L.divIcon({
       className: "stopMarker",
-      iconSize: L.point(20, 20, true)
+      iconSize: L.point(20, 20, true),
     });
   };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle size="small">
-            {info.data ? info.data[0].text : "Ładowanie"}
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <MapContainer
           className="map-container"
@@ -55,16 +55,17 @@ const Map: React.FC = () => {
             Object.keys(buses.data).map((key, index) => (
               <Marker
                 key={index}
-                icon={BusMarker}
+                icon={BusMarker(buses.data[key].label, buses.data[key].type === "Autobusy Elektryczne")}
                 position={{
                   lat: buses.data[key].lat,
                   lng: buses.data[key].lon,
                 }}
-              >
-                <Tooltip direction="right" offset={[8, 0]} opacity={1} permanent>{buses.data[key].label}</Tooltip>
-              </Marker>
+              ></Marker>
             ))}
-          <MarkerClusterGroup maxClusterRadius={40} iconCreateFunction={clusterIcon}>
+          <MarkerClusterGroup
+            maxClusterRadius={40}
+            iconCreateFunction={clusterIcon}
+          >
             {stops.data &&
               Object.keys(stops.data).map((key, index) => (
                 <Marker

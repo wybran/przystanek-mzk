@@ -14,6 +14,8 @@ import { busOutline, calendarOutline, mapOutline } from 'ionicons/icons';
 import Map from './pages/Map';
 import Timetable from './pages/Timetable';
 import Stops from './pages/Stops';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -70,6 +72,7 @@ const App: React.FC = () => (
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>
+    <ToastContainer />
   </IonApp>
 );
 
