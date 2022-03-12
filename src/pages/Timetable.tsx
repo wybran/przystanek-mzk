@@ -5,7 +5,7 @@ import "./Timetable.css";
 
 const Timetable: React.FC = () => {
   const refIframe = useRef<any>();
-  const url = "https://www.m2.rozkladzik.pl/zielona_gora/index.html";
+  const url = "https://www.m2.rozkladzik.pl/zielona_gora/rozklad_jazdy.html";
 
   const backToHomePage = () => {
     refIframe.current.src = url;

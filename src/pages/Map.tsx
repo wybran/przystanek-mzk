@@ -92,7 +92,6 @@ const Map: React.FC = () => {
                   }}
                   eventHandlers={{
                     click: async () => {
-                      console.log(stops.data[key].id);
                       setSelectedStop(stops.data[key].id);
                       setModalOpen(true);
                     },
