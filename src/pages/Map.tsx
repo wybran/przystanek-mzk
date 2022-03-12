@@ -1,14 +1,18 @@
 import {
   IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonModal,
   IonPage,
+  IonText,
   useIonViewDidEnter,
 } from "@ionic/react";
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useRef, useState } from "react";
+import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import { useQuery } from "react-query";
@@ -16,12 +20,19 @@ import { BusMarker } from "../components/BusMarker";
 import { StopMarker } from "../components/StopMarker";
 import ApiService from "../services/ApiService";
 import { toast } from "react-toastify";
+import { Geolocation } from "@capacitor/geolocation";
 import "./Map.css";
+import Timestamp from "../utils/Timestamp";
+import { arrowBackCircle } from "ionicons/icons";
+import { useHistory } from "react-router";
 
 const Map: React.FC = () => {
+  const history = useHistory<any>();
+  const [location, setLocation] = useState<any>({ lat: 0, lng: 0 });
+  const markerRef = useRef<any | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const buses = useQuery("buses", () => ApiService.getBuses(), {
-    refetchInterval: 5000,
+    refetchInterval: 10000,
   });
   const stops = useQuery("stops", ApiService.getStops);
   useQuery("info", ApiService.getInfo, {
@@ -35,12 +46,22 @@ const Map: React.FC = () => {
     ["departures", selectedStop],
     ({ queryKey }) => ApiService.getDepartures(queryKey[1]),
     {
-      refetchInterval: 5000,
+      refetchInterval: 10000,
     }
   );
 
   useIonViewDidEnter(() => {
     window.dispatchEvent(new Event("resize"));
+    Geolocation.getCurrentPosition().then((res) => {
+      const lat = res.coords.latitude;
+      const lng = res.coords.longitude;
+      setLocation({ lat, lng });
+    });
+    if (history.location.state.stop) {
+      setSelectedStop(history.location.state.stop.id);
+      setModalOpen(true);
+      history.replace("map", { stop: null });
+    }
   });
 
   const clusterIcon = () => {
@@ -54,6 +75,15 @@ const Map: React.FC = () => {
     <IonPage>
       <IonContent fullscreen>
         <MapContainer
+          whenCreated={(map) => {
+            Geolocation.getCurrentPosition().then((res) => {
+              const lat = res.coords.latitude;
+              const lng = res.coords.longitude;
+              setLocation({ lat, lng });
+              markerRef.current.setLatLng([lat, lng]);
+              map.flyTo({ lat: lat, lng: lng });
+            });
+          }}
           className="map-container"
           center={{ lat: 51.9356214, lng: 15.5061862 }}
           zoom={13}
@@ -63,6 +93,11 @@ const Map: React.FC = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=d973041fe75f479393efd1a71c26b6d3"
           />
+
+          <Marker position={location} ref={markerRef}>
+            <Tooltip>Twoja lokalizacja</Tooltip>
+          </Marker>
+
           {buses.data &&
             Object.keys(buses.data).map((key, index) => (
               <Marker
@@ -96,9 +131,7 @@ const Map: React.FC = () => {
                       setModalOpen(true);
                     },
                   }}
-                >
-                  <Popup>{stops.data[key].name}</Popup>
-                </Marker>
+                ></Marker>
               ))}
           </MarkerClusterGroup>
         </MapContainer>
@@ -106,29 +139,40 @@ const Map: React.FC = () => {
       <IonModal
         isOpen={modalOpen}
         swipeToClose={true}
-        breakpoints={[0.1, 0.5, 1]}
-        initialBreakpoint={0.5}
         onDidDismiss={() => setModalOpen(false)}
       >
         <IonContent>
-          <IonList>
-            {departures.data && Object.keys(departures.data).length > 0 ? (
-              <IonItem>                                                #TODO convert timestamp
-                <IonLabel>[{selectedStop}] {departures.data[0]?.stop} {departures.dataUpdatedAt}</IonLabel>
-              </IonItem>
-            ) : null}
+          {departures.data && Object.keys(departures.data).length > 0 ? (
+            <IonText color="success" class="ion-text-center">
+              <h3>
+                [{selectedStop}] {departures.data[0]?.stop}{" "}
+                {Timestamp.timestampToTime(departures.dataUpdatedAt)}
+              </h3>
+            </IonText>
+          ) : (
+            <IonText color="success" class="ion-text-center">
+              <h3>Brak odjazdów z tego przystanku</h3>
+            </IonText>
+          )}
 
+          <IonList>
             {departures.data &&
               Object.keys(departures.data).map((key, index) => (
                 <IonItem key={index}>
                   <IonLabel>
-                    {departures.data[key].line}{" "}
+                    {departures.data[key].line} 🚌{" "}
                     {departures.data[key].destination}
                   </IonLabel>
                   {departures.data[key].time}
                 </IonItem>
               ))}
           </IonList>
+
+          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+            <IonFabButton onClick={() => setModalOpen(false)}>
+              <IonIcon icon={arrowBackCircle} />
+            </IonFabButton>
+          </IonFab>
         </IonContent>
       </IonModal>
     </IonPage>
