@@ -1,6 +1,6 @@
 {
 	"appId": "eu.krystian_wybranowski.przystanekmzk",
-	"appName": "Przystanek MZK",
+	"appName": "MZK",
 	"webDir": "build",
 	"bundledWebRuntime": false
 }
