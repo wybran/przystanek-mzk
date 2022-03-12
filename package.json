@@ -23,6 +23,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.26.1",
+    "cordova-plugin-ionic": "5.5.1",
     "ionicons": "^5.4.0",
     "leaflet": "^1.7.1",
     "node-fetch": "^3.2.2",
