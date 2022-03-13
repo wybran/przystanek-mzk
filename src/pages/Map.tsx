@@ -12,7 +12,7 @@ import {
   useIonViewDidEnter,
 } from "@ionic/react";
 import { useRef, useState } from "react";
-import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import { useQuery } from "react-query";
@@ -57,7 +57,7 @@ const Map: React.FC = () => {
       const lng = res.coords.longitude;
       setLocation({ lat, lng });
     });
-    if (history.location.state.stop) {
+    if (history.location.state?.stop) {
       setSelectedStop(history.location.state.stop.id);
       setModalOpen(true);
       history.replace("map", { stop: null });
@@ -101,6 +101,7 @@ const Map: React.FC = () => {
           {buses.data &&
             Object.keys(buses.data).map((key, index) => (
               <Marker
+                zIndexOffset={5}
                 key={index}
                 icon={BusMarker(
                   buses.data[key].label,
@@ -109,8 +110,9 @@ const Map: React.FC = () => {
                 position={{
                   lat: buses.data[key].lat,
                   lng: buses.data[key].lon,
-                }}
-              ></Marker>
+                }}>
+                  <Popup>Numer boczny: {buses.data[key].id}</Popup>
+                </Marker>
             ))}
           <MarkerClusterGroup
             maxClusterRadius={40}
