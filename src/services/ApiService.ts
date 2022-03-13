@@ -28,12 +28,12 @@ class ApiService {
         return response.data;
       });
   }
-  getDepartures(id: any) {
-    if (!id) return;
+  getDepartures(stop: any) {
+    if (!stop) return;
     
     return axios
       .get(
-        `https://poland-public-transport.konhi.workers.dev/v1/zielonagora/mzk/stops/${id}/departures`
+        `https://poland-public-transport.konhi.workers.dev/v1/zielonagora/mzk/stops/${stop.id}/departures`
       )
       .then((response) => {
         return response.data;

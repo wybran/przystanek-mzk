@@ -1,14 +1,6 @@
 import {
   IonContent,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonModal,
   IonPage,
-  IonText,
   useIonViewDidEnter,
 } from "@ionic/react";
 import { useRef, useState } from "react";
@@ -16,21 +8,19 @@ import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import { useQuery } from "react-query";
+import { useHistory } from "react-router";
 import { BusMarker } from "../components/BusMarker";
 import { StopMarker } from "../components/StopMarker";
 import ApiService from "../services/ApiService";
 import { toast } from "react-toastify";
 import { Geolocation } from "@capacitor/geolocation";
 import "./Map.css";
-import Timestamp from "../utils/Timestamp";
-import { arrowBackCircle } from "ionicons/icons";
-import { useHistory } from "react-router";
 
 const Map: React.FC = () => {
   const history = useHistory<any>();
   const [location, setLocation] = useState<any>({ lat: 0, lng: 0 });
   const markerRef = useRef<any | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+
   const buses = useQuery("buses", () => ApiService.getBuses(), {
     refetchInterval: 10000,
   });
@@ -41,15 +31,6 @@ const Map: React.FC = () => {
     refetchOnMount: false,
   });
 
-  const [selectedStop, setSelectedStop] = useState<any | null>(null);
-  const departures = useQuery(
-    ["departures", selectedStop],
-    ({ queryKey }) => ApiService.getDepartures(queryKey[1]),
-    {
-      refetchInterval: 10000,
-    }
-  );
-
   useIonViewDidEnter(() => {
     window.dispatchEvent(new Event("resize"));
     Geolocation.getCurrentPosition().then((res) => {
@@ -57,11 +38,6 @@ const Map: React.FC = () => {
       const lng = res.coords.longitude;
       setLocation({ lat, lng });
     });
-    if (history.location.state?.stop) {
-      setSelectedStop(history.location.state.stop.id);
-      setModalOpen(true);
-      history.replace("map", { stop: null });
-    }
   });
 
   const clusterIcon = () => {
@@ -129,8 +105,9 @@ const Map: React.FC = () => {
                   }}
                   eventHandlers={{
                     click: async () => {
-                      setSelectedStop(stops.data[key].id);
-                      setModalOpen(true);
+                      history.push("stops", {
+                        stop: stops.data[key],
+                      })
                     },
                   }}
                 ></Marker>
@@ -138,45 +115,6 @@ const Map: React.FC = () => {
           </MarkerClusterGroup>
         </MapContainer>
       </IonContent>
-      <IonModal
-        isOpen={modalOpen}
-        swipeToClose={true}
-        onDidDismiss={() => setModalOpen(false)}
-      >
-        <IonContent>
-          {departures.data && Object.keys(departures.data).length > 0 ? (
-            <IonText color="success" class="ion-text-center">
-              <h3>
-                [{selectedStop}] {departures.data[0]?.stop}{" "}
-                {Timestamp.timestampToTime(departures.dataUpdatedAt)}
-              </h3>
-            </IonText>
-          ) : (
-            <IonText color="success" class="ion-text-center">
-              <h3>Brak odjazdów z tego przystanku</h3>
-            </IonText>
-          )}
-
-          <IonList>
-            {departures.data &&
-              Object.keys(departures.data).map((key, index) => (
-                <IonItem key={index}>
-                  <IonLabel>
-                    {departures.data[key].line} 🚌{" "}
-                    {departures.data[key].destination}
-                  </IonLabel>
-                  {departures.data[key].time}
-                </IonItem>
-              ))}
-          </IonList>
-
-          <IonFab vertical="bottom" horizontal="end" slot="fixed">
-            <IonFabButton onClick={() => setModalOpen(false)}>
-              <IonIcon icon={arrowBackCircle} />
-            </IonFabButton>
-          </IonFab>
-        </IonContent>
-      </IonModal>
     </IonPage>
   );
 };
