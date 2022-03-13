@@ -65,7 +65,7 @@ const Stops: React.FC = () => {
             Object.keys(filteredStops).map((key, index) => (
               <IonItem
                 key={index}
-                onClick={() => history.push("map", { stop: stops.data[key] })}
+                onClick={() => history.push("map", { stop: stops.data[filteredStops[key]] })}
               >
                 <IonLabel>
                   🚏 [{stops.data[filteredStops[key]].id}] {stops.data[filteredStops[key]].name}
