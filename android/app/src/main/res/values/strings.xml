@@ -4,10 +4,4 @@
   <string name="title_activity_main">MZK</string>
   <string name="package_name">eu.krystian_wybranowski.przystanekmzk</string>
   <string name="custom_url_scheme">eu.krystian_wybranowski.przystanekmzk</string>
-  <string name="ionic_app_id">46a05179</string>
-  <string name="ionic_channel_name">Production</string>
-  <string name="ionic_update_method">auto</string>
-  <string name="ionic_max_versions">2</string>
-  <string name="ionic_min_background_duration">30</string>
-  <string name="ionic_update_api">https://api.ionicjs.com</string>
 </resources>

@@ -36,6 +36,7 @@ const Stops: React.FC = () => {
     onSuccess: async (data) => {
       const keys = await getAllKeys();
       let array = Object.values(data);
+      // eslint-disable-next-line
       array.findIndex((stop: any) => {
         if (keys.includes(stop.id)) {
           array = [stop, ...array.filter((item: any) => item.id !== stop.id)];
