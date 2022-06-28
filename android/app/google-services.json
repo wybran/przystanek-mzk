@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "880657687796",
+    "firebase_url": "https://przystanek-mzk.firebaseio.com",
+    "project_id": "przystanek-mzk",
+    "storage_bucket": "przystanek-mzk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880657687796:android:ccd10d60522ed24a",
+        "android_client_info": {
+          "package_name": "eu.krystian_wybranowski.przystanekmzk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880657687796-jsk3pun1brr9mkgnt1r4fng3hmjh4eha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.krystian_wybranowski.przystanekmzk",
+            "certificate_hash": "7fc8ff706fd610f93bdd3576412869f4f0c2dc2b"
+          }
+        },
+        {
+          "client_id": "880657687796-s9304s3u3uab90057qm027sifp47ak64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOTIFYQ5MTNhy81HpRlbauTTEGxAFNLFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880657687796-s9304s3u3uab90057qm027sifp47ak64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

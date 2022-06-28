@@ -61,7 +61,7 @@ const App: React.FC = () => {
             <Route exact path="/timetable">
               <Timetable />
             </Route>
-            <Route path="/stops">
+            <Route exact path="/stops">
               <Stops />
             </Route>
             <Route exact path="/">
