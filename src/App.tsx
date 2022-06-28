@@ -16,6 +16,7 @@ import Timetable from "./pages/Timetable";
 import Stops from "./pages/Stops";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BannerAd } from '@admob-plus/capacitor'
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -43,6 +44,12 @@ setupIonicReact();
 const App: React.FC = () => {
 
   useEffect(() => {
+    const banner = new BannerAd({
+      adUnitId: 'ca-app-pub-8487255892576881/3052275223',
+      position: 'top'
+    })
+    banner.show()
+    
     const setupStore = async () => {
       await createStore("mzkDB");
     };

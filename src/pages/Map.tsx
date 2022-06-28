@@ -14,7 +14,6 @@ import { StopMarker } from "../components/StopMarker";
 import ApiService from "../services/ApiService";
 import { toast } from "react-toastify";
 import { Geolocation } from "@capacitor/geolocation";
-import { AdMobPlus, BannerAd } from '@admob-plus/capacitor'
 import "./Map.css";
 
 const Map: React.FC = () => {
@@ -39,14 +38,6 @@ const Map: React.FC = () => {
       const lng = res.coords.longitude;
       setLocation({ lat, lng });
     });
-    const banner = new BannerAd({
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      position: 'top'
-    })
-    banner.show()
-    AdMobPlus.addListener('banner.impression', async () => {
-      await banner.hide()
-    })
   });
 
   const clusterIcon = () => {
@@ -76,7 +67,7 @@ const Map: React.FC = () => {
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=d973041fe75f479393efd1a71c26b6d3"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
           <Marker position={location} ref={markerRef}>

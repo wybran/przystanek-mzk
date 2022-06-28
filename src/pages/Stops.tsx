@@ -34,8 +34,11 @@ const Stops: React.FC = () => {
 
   useQuery("stops", ApiService.getStops, {
     onSuccess: async (data) => {
-      const keys = await getAllKeys();
       let array = Object.values(data);
+      const keys = await getAllKeys();
+      if (keys) {
+        setFavouriteStops(keys);
+      }
       // eslint-disable-next-line
       array.findIndex((stop: any) => {
         if (keys.includes(stop.id)) {
@@ -55,8 +58,6 @@ const Stops: React.FC = () => {
   );
 
   useIonViewWillEnter(async () => {
-    await getAllFavoriteStops();
-
     if (history.location.state?.stop) {
       setSelectedStop(history.location.state.stop);
       setModalOpen(true);
@@ -69,6 +70,13 @@ const Stops: React.FC = () => {
     if (keys) {
       setFavouriteStops(keys);
     }
+    let array = Object.values(stops);
+    stops.findIndex((stop: any) => {
+      if (keys.includes(stop.id)) {
+        array = [stop, ...array.filter((item: any) => item.id !== stop.id)];
+      }
+    });
+    setStops(array);
   };
 
   const addToFavourite = async (stop: any) => {
