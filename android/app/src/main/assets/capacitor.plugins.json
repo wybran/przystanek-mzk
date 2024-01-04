@@ -1,7 +1,7 @@
 [
 	{
-		"pkg": "@admob-plus/capacitor",
-		"classpath": "admob.plus.capacitor.AdMobPlusPlugin"
+		"pkg": "@capacitor-community/admob",
+		"classpath": "com.getcapacitor.community.admob.AdMob"
 	},
 	{
 		"pkg": "@capacitor/app",
